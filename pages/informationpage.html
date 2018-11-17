@@ -1,0 +1,259 @@
+<div class = "content mycontent informationContent">
+	<button class = "btn btn-success addBtn_2" data-toggle = "modal" data-target = "#myModal_2">新增</button>
+	<button class = "btn btn-danger	 delBtn_2">批量删除</button>
+	<table class="table table-bordered ">
+		<thead>
+			<tr>
+				<td>编号</td>
+				<td>文章标题</td>
+				<td>所属栏目</td>
+				<td>背景音乐</td>
+				<td>作者</td>
+				<td>发布时间</td>
+				<td>阅读次数</td>
+				<td>操作</td>
+			</tr>
+			<tr class = "seltr hidden">
+				<td class = "seltd"><input type="checkbox" class = "myCheck"></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td class = "edittd">
+					<i class = "glyphicon glyphicon-edit editBtn"></i>
+					<i class = "glyphicon glyphicon-trash trashBtn"></i>
+				</td>
+			</tr>
+		</thead>
+	</table>
+</div>
+<!-- 添加一个模态框 -->
+<div class="modal" id = "myModal_2" data-backdrop="static">
+	<div class="modal-content">
+		<div class="modal-header">
+			<span class = "back_2">< 返回</span>
+			<span class = "myTitle">发布资讯</span>
+		</div>
+		<div class="modal-body">
+			<p>标题</p>
+			<input type="text" name = "titlename" class = "title">
+			<p>所属栏目</p>
+			<select name="" id="colum">
+				<option value="">------请选中一个符合的名称(也可不选)--------</option>
+			</select>
+			<!-- <input type="text" name = "colname" class = "colum"><br> -->
+			<p>列表样式<input type="text" class = "listStyle"></p>
+			<div class="bgone">
+				<img src="images/u352.jpg" alt="">
+			</div>
+			<div class="bgtwo">
+				<img src="images/u350.jpg" alt="">
+			</div>
+			<p class = "list">列表缩略图</p>
+			<span class = "uploading">点击上传</span>
+			<p>正文</p>
+			<input type="text" name = "text" class = "textpart">
+			<span class = "hidId"></span>
+			<button class = "btn btn-success issue">发布</button>
+			<button class = "btn btn-success cancel">取消</button>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(".informationContent").height($(window).height()-48);
+	$(function() {
+		// 点击返回和取消按钮，关闭模态框
+		$(".back_2").click(function() {
+			$("#myModal_2").modal("hide");
+		});
+		$(".cancel").click(function() {
+			$("#myModal_2").modal("hide");
+		});
+		// 获取后台数据
+		var obj = {
+			page: 0,
+			pageSize: 10
+		};
+		$.get("http://120.78.164.247:8099/manager/article/findArticle",obj,function(results) {
+			console.log(results.data.list);
+			// console.log(results);
+			var list = results.data.list;
+			list.forEach(function(item) {
+				var cloneTr = $(".hidden").clone().removeClass("hidden");
+				cloneTr.children(":first").children().val(item.id);
+				// 获取标题
+				if(item.title) {
+					$(cloneTr.children()[1]).text(item.title);
+				}else {
+					$(cloneTr.children()[1]).text("无");
+				}
+				//获取所属栏目
+				if(item.category) {
+					$(cloneTr.children()[2]).attr("flag",item.category.id);
+					$(cloneTr.children()[2]).text(item.category.name);
+				}else {
+					$(cloneTr.children()[2]).text("无");
+				}
+				// 获取背景音乐
+				if(item.music) {
+					$(cloneTr.children()[3]).text(item.music);
+				}else {
+					$(cloneTr.children()[3]).text("无");
+				}
+				//获取作者名称
+				if(item.author) {
+					$(cloneTr.children()[4]).text(item.author);
+				}else {
+					$(cloneTr.children()[4]).text("无");
+				}
+				// 获取发布时间
+				if(item.publishtime) {
+					$(cloneTr.children()[5]).text(item.publishtime);
+				}else {
+					$(cloneTr.children()[5]).text("无");
+				}
+				//获取阅读次数
+				if(item.readtimes) {
+					$(cloneTr.children()[6]).text(item.readtimes);
+				}else {
+					$(cloneTr.children()[6]).text("无");
+				}
+				$("thead").append(cloneTr);
+				$.get("http://120.78.164.247:8099/manager/category/findAllCategory",function(results) {
+					var data = results.data;
+					data.forEach(function(item) {
+						var option = "<option value='"+item.id+"'>"+item.name+"</option>";
+	    				$("#colum").append(option);
+					});
+					
+				});
+			});
+
+			// 单行删除
+			$(".trashBtn").click(function() {
+				var id = $(this).parent().parent().children(":first").children().val();
+				var o = {
+					id: Number(id)
+				} 
+				$.get("http://120.78.164.247:8099/manager/article/deleteArticleById",o,function(results) {
+					if(results.status == 200) {
+						$(".rightContent").load('pages/informationpage.html');
+					}else {
+						alert("删除失败");
+					}
+				});
+			});
+			// 多行删除
+			$(".delBtn_2").click(function() {
+				var ids = [];
+				// var id = $(".myCheck:checked").val();
+				// alert(id);
+				// console.log(id);
+				$(".myCheck:checked").each(function(index,item) {
+					var id = $(item).val();
+					ids.push(id);
+				})
+				// console.log(ids);
+				var o = {
+					ids: ids.toString()
+				}
+				// console.log(o);
+				if(ids.length) {
+					$.post("http://120.78.164.247:8099/manager/article/batchDeleteArticle",o,function(results) {
+						if(results.status == 200) {
+							$(".rightContent").load('pages/informationpage.html');
+						}else {
+							alert("删除失败");
+						}
+					})
+				}else {
+					alert("请选择你想删除的选项");
+				}
+			})
+			// 新增按钮
+			$(".addBtn_2").click(function() {
+				// 修改模态框的标题
+				$(".myTitle").text("发布资讯");
+				// 新增前清空先前输入框中的数据
+				$("#colum").val("");
+				$(".title").val("");
+				$(".textpart").val("");
+				$(".listStyle").val("");
+			});
+			// 修改按钮
+			$(".editBtn").click(function() {
+				$("#myModal_2").modal("show");
+				// 修改模态框的标题
+				$(".myTitle").text("修改发布资讯");
+				var title = $(this).parent().parent().children()[1].innerHTML;
+							// alert(category);
+				// alert(title);
+				// 获取id 放入隐藏元素中用来判断是否为修改
+				var hidId = $(this).parent().parent().children(":first").children().val();
+				$(".hidId").text(hidId);
+				// alert(list);
+				var mid = $(this).parent().parent().children()[2].getAttribute("flag");
+				$("#colum").val(mid);
+				$(".title").val(title);
+			});	
+
+			// 点击发布按钮
+			$(".issue").click(function() {
+				if($(".title").val() && $(".listStyle").val()) {
+					var title = $(".title").val();
+					var content = $(".textpart").val();
+					var liststyle = $(".listStyle").val();
+					var date = new Date();
+					var time =  date.getFullYear() + "-" + (date.getMonth()+1)+ "-" +date.getDate()+" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+					var hidId = $(".hidId").text();
+					var category = $("#colum").val();
+					var obj = {
+						name:category
+					}
+					if(hidId) {
+						// 此条数据有id值表示存在则应修改
+						var o = {
+							id: hidId,
+							title: title,
+							category: category,
+							liststyle: liststyle,
+							content: content,
+							author: "给你们放首歌",
+							music: "囧架架",
+							publishtime: time,
+							readtimes: 0
+						}
+					}else {
+						var o = {
+							page: 6,
+							title: title,
+							category: obj,
+							music: "酷狗",
+							author: "王炸",
+							publishtime: time,
+							readtimes: 0,
+							content: content,
+							liststyle: liststyle
+						}
+					}
+					$.post("http://120.78.164.247:8099/manager/article/saveOrUpdateArticle",o,function(results) {
+						if(results.status == 200) {
+							alert("添加成功");
+							$(".rightContent").load('pages/informationpage.html');
+						}else {
+							alert("添加失败");
+						}
+					})
+				}else {
+					alert("请把信息填写完整");
+				}
+			});
+
+			
+
+		});
+
+	});
+</script>

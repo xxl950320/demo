@@ -1,0 +1,335 @@
+
+/*左侧导航目录*/
+.col-md-2 {
+	background-color: #282830;
+	padding: 0;
+}	
+.top {
+	background-color: #3D556D;
+	height: 38px;
+}
+.top img {
+	position: absolute;
+	top: 5px;
+	left: 20px;
+}
+.top p {
+	display: inline-block;
+	text-align: center;
+	width: 176px;
+	position: absolute;
+	top: 10px;
+	left: 2px;
+}
+.top p span {
+	color: #fff;
+	font-size: 14px;
+}
+.myNav {
+	margin-top: 50px;
+	list-style: none;
+	padding: 0;
+}
+.myNav li {
+	width: 195px;
+	height: 30px;
+	color: #fff;
+	border-bottom: 1px solid #333;
+	line-height: 30px;
+	position: relative;
+	cursor: pointer;
+}
+.myNav li.option {
+	background-color: orange;
+}
+.myNav li a {
+	color: #fff;
+}
+.myNav li a > img {
+	margin-left: 20px;
+}
+.myNav li p {
+	position: absolute;
+	left: 40px;
+	top: 2px;
+	width: 138px;
+	text-align: left;
+}
+.myNav li img:last-child {
+	position: absolute;
+	top: 10px;
+	right: 20px;
+}
+/*右侧上面的菜单栏*/
+.col-md-10 {
+	background-color: #F0F0F0;
+	padding: 0;
+	border-right: 1px solid #ccc;
+	position: relative;
+}
+.menu {
+	height: 38px;
+	background-color: #fff;
+	line-height: 38px;
+	text-align: left;
+	padding: 0;
+}
+.menu::after {
+	content: "";
+	display: block;
+	clear: both;
+}
+.menu li {
+	float: left;
+	list-style: none;
+	position: relative;
+	font-size: 12px;
+}	
+.menu li:first-child {
+	margin-left: 10px;
+}
+.menu li:nth-child(2) {
+	margin-right: 730px;
+	margin-left: 30px;
+}
+.menu li .message {
+	position: absolute;
+	top: 5px;
+	left: 7px;
+	width: 14px;
+	height: 14px;
+	border-radius: 7px;
+	background-color: #E05140;
+	font-size: 10px;
+}
+.menu li .message strong {
+	position: absolute;
+	top: -11px;
+	left: 4px;
+	color: #fff;
+}
+.menu li:nth-child(4) {
+	position: absolute;
+	right: 40px;
+}
+/*.rightContent {
+	position: relative;
+}*/
+.content #container,.content #container2 {
+	width: 96%;
+	height: 300px;
+	margin: 0 auto;
+	margin-bottom: 20px; 
+}
+.mycontent{
+	background-color: #fff;
+	height: 800px; 
+	width: 98%;
+	margin: 0 auto;
+	position: relative;
+}
+.mycontent button {
+	margin-top: 10px;
+	margin-left: 10px;
+	font-size: 12px;
+}
+.mycontent table {
+	width: 98%;
+	margin: 0 auto;
+	margin-top: 10px;
+	text-align: center;
+}
+.mycontent table .seltr i:first-child {
+	margin-right: 10px;
+}
+/*模态框样式*/
+.rightPane {
+	position: relative;	
+}
+#myModal {
+	position: absolute;
+	top: 0px;
+	left: 650px;
+	width: 300px;
+	padding: 0;
+	border: 1px solid black;
+	background-color: #fff;
+}
+#myModal .modal-content {
+    box-shadow: none;
+	border: 0;
+	border-radius: 0;
+}
+#myModal .modal-header span {
+	margin-right: 50px;
+	cursor: pointer;
+}
+#myModal .modal-body input {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	width: 260px;	
+}
+#myModal .modal-body select {	
+	width: 260px;
+	height: 2em;
+	line-height: 2em;
+	margin-bottom: 10px;
+}
+#myModal .modal-body input.desc {
+	height: 60px;
+}
+#myModal .modal-body img {
+	position: absolute;
+	top: 140px;
+	right: 36px;
+}
+.sureBtn {
+	position: absolute;
+	font-size: 12px;
+	right: 20px;
+}
+#myModal_2 {
+	position: absolute;
+	font-size: 12px;
+	background-color: #fff;
+}
+#myModal_2 .modal-content {
+	box-shadow: none;
+	border: 0;
+	border-radius: 0;
+}
+#myModal_2 .modal-content .back_2 {
+	margin-right: 300px;
+	cursor: pointer;
+}
+#myModal_2 .modal-body input {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	width: 98%;
+	height: 2em;
+}
+#myModal_2 .modal-body #colum {
+	width: 28%;
+	height: 2em;
+}
+#myModal_2 .modal-body .bgone,
+#myModal_2 .modal-body .bgtwo {
+	width: 240px;
+	height: 100px;
+	display: inline-block;
+	border: 1px solid rgba(33,33,33,0.2);
+	text-align: center;
+	line-height: 100px;
+}
+#myModal_2 .modal-body .bgone img,
+#myModal_2 .modal-body .bgtwo img {
+	width: 216px;
+	height: 83px;
+}
+#myModal_2 .modal-body .list {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+#myModal_2 .modal-body .uploading {
+	display: block;
+	width: 150px;
+	height: 50px;
+	font-size: 18px;
+	line-height: 50px;
+	border: 1px solid #EDEDED;
+	text-align: center;
+	color: #169BD5;
+}
+#myModal_2 .modal-body .textpart {
+	height: 200px;
+}
+#myModal_2 .modal-body .issue,
+#myModal_2 .modal-body .cancel  {
+	position: absolute;
+	right: 28px;
+	bottom: -16px;
+	font-size: 12px;
+}
+#myModal_2 .modal-body .cancel {
+	right: 100px;
+}
+/*改变模态框的背景透明度*/
+.modal-backdrop.in {
+  filter: alpha(opacity=0);
+  opacity: 0;
+}
+.myCon, .informationContent, .columnContent {
+	overflow: auto;
+}
+.myCon .troduce_2 {
+	width: 210px;
+	top: 60px;
+	left: 10px;
+	border: 1px solid #EDEDED;
+	margin-right: 40px;
+	margin-bottom: 20px;
+	float: left;
+}
+.myCon .mybtn {
+	position: absolute;
+	font-size: 12px;
+	top: 10px;
+	left: 10px;
+}
+.troduce_2 {
+	text-align: center;
+	position: relative;
+}
+.troduce_2 .myCloseBtn {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	cursor: pointer;
+}
+.troduce_2 > img {
+	width: 110px;
+	height: 110px;
+	border-radius: 50%;
+}
+.troduce_2 p {
+	text-align: left;
+	text-indent: 1em;
+	font-size: 12px;
+	font-weight: 400;
+}
+.troduce_2 p span {
+	position: absolute;
+	left: 0;
+}
+.troduce_2 p:nth-child(3) span,
+.troduce_2 p:nth-child(4) span,
+.troduce_2 p:nth-child(5) span,
+.troduce_2 p:nth-child(6) span {
+	left: 100px;
+}
+.troduce_2 .myclose {
+	width: 60px;
+	height: 25px;
+	font-size: 12px;
+	border-top-right-radius: 12.5px;
+	border-bottom-right-radius: 12.5px;
+	border-top-left-radius: 12.5px;
+	border-bottom-left-radius: 12.5px;
+	background-color: #ccc;
+	text-align: center;
+	line-height: 25px;
+	color: #fff;
+	left: 110px;
+}
+.troduce_2 .myclose .rImg {
+	position: absolute;
+	top: 2.5px;
+	left: 2px;
+}
+.troduce_2 .myclose i {
+	font-style: normal;
+}
+.troduce_2 .myclose .startbtn {
+	margin-left: -40px;
+	display: none;
+}

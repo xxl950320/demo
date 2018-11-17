@@ -1,0 +1,136 @@
+<div class = "content mycontent myCon">
+	<button class = "btn btn-success mybtn" data-toggle = "modal" data-target = "#myModal_3">新增</button>
+	<div class="troduce  hidden">
+		<span class = "myCloseBtn" flag = "">&times;</span>
+		<img src="images/u443.png" alt="">
+		<p>用户名<span>vicky</span></p>
+		<p>真实姓名<span>真可怕</span></p>
+		<p>手机号<span>18955623215</span></p>
+		<p>email<span>zhenkp@qq.com</span></p>
+		<p>状态
+			<span class = "myclose">
+				<img src="images/c_u469.png" alt="" class = "rImg">
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<i class = "closebtn">关闭</i>
+				<i class = "startbtn">启动</i>
+			</span>
+		</p>
+	</div>
+</div>
+<div class="modal" id = "myModal_3">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<span class = "backBtn_2">< 返回</span>
+				<span>添加用户</span>
+			</div>
+			<div class="modal-body">
+				<p>用户名</p>
+				<input type="text" class = "myUserName">
+				<p>密码</p>
+				<input type="text" class = "myPassword">
+				<p>重复密码</p>
+				<input type="text" class = "myPassword_2">
+				<p>真实姓名</p>
+				<input type="text" class = "myName">
+				<p>email</p>
+				<input type="text" class = "myEmail">
+			</div>
+			<div class="modal-footer">
+				<button class = "btn btn-success mySureBtn">确认</button>
+				<button class = "btn btn-danger cancel">取消</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(".myCon").height($(window).height()-48);
+	$(function() {
+		$(".cancel").click(function() {
+			$(".modal").modal("hide");
+		});
+		$(".backBtn_2").click(function() {
+			$(".modal").modal("hide");
+		});
+
+		// 获取数据库中所有的用户信息
+		$.get("http://120.78.164.247:8099/manager/user/findAllUser",function(results) {
+			console.log(results);
+			var data = results.data;
+			data.forEach(function(item) {
+				var cloneDiv = $(".troduce").clone().removeClass("hidden","troduce").attr("class","troduce_2");
+				cloneDiv.children(":first").attr("flag",item.id);
+				if(item.userface) {
+					$(cloneDiv.children()[1]).attr("src",item.userface);
+				}else {
+					// alert("没头像展示,请放入你喜欢的头像");
+				}
+				$(cloneDiv.children()[2]).children().text(item.username);
+				$(cloneDiv.children()[3]).children().text(item.nickname);
+				$(cloneDiv.children()[5]).children().text(item.email);
+				$(".myCon").append(cloneDiv);
+			});
+			//确认按钮时添加数据
+			$(".mySureBtn").click(function() {
+				if($(".myPassword").val() && $(".myPassword_2").val() && $(".myUserName").val() && $(".myName").val() && $(".myEmail").val()) {
+					if($(".myPassword").val() == $(".myPassword_2").val()) {
+						var username = $(".myUserName").val();
+						var password = $(".myPassword").val();
+						var nickname = $(".myName").val();
+						var email = $(".myEmail").val();
+						var o = {
+							username: username,
+							password: password,
+							nickname: nickname,
+							email: email
+						}
+						$.post("http://120.78.164.247:8099/manager/user/saveOrUpdateUser",o,function(results) {
+							if(results.status == 200) {
+								$("#myModal_3").modal("hide");
+								$(".rightContent").load('pages/userpage.html');
+							}else {
+								alert("添加失败");
+							}
+						})
+					}else {
+						alert("密码与上面的不同,请从新输入");
+					}
+				}else {
+					alert("请把信息填完整");
+				}
+			});
+			// 删除用户信息
+			$(".myCloseBtn").click(function() {
+				var id = $(this).attr("flag");
+				var o = {
+					id: Number(id)
+				}
+				$.get("http://120.78.164.247:8099/manager/user/deleteUserById",o,function(results) {
+					if(results.status == 200) {
+						$(".rightContent").load('pages/userpage.html');
+					}else {
+						alert("删除失败");
+					}
+				})
+			})
+
+			// 点击启动和关闭
+			$(".rImg").each(function(index,item) {
+				$(item).click(handler);
+				function handler() {
+					$(item.nextElementSibling.nextElementSibling).show().prev().hide();
+					$(item.parentNode).css("backgroundColor","#68B828");
+					$(item).animate({left:'+=35px'},200);
+					$(item).unbind();
+					$(item).click(function() {
+						$(item.nextElementSibling.nextElementSibling).hide().prev().show();
+						$(item.parentNode).css("backgroundColor","#ccc");
+						$(item).animate({left:'-=35px'},200);
+						$(item).unbind();
+						$(item).click(handler);
+					})
+				}
+			});
+		})
+	})
+</script>

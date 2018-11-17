@@ -1,0 +1,200 @@
+<div class = "content mycontent columnContent" >
+	<button class = "btn btn-success addBtn" data-toggle = "modal" data-target = "#myModal">新增</button>
+	<button class = "btn btn-danger delBtn">批量删除</button>
+	<table class="table table-bordered ">
+		<thead>
+			<tr>
+				<td>编号</td>
+				<td>栏目名称</td>
+				<td>父项目</td>
+				<td>描述</td>
+				<td>操作</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class = "hidden">
+				<td class = "sel_2"><input type="checkbox" class = "myCheck"></td>
+				<td class = "ctd"></td>
+				<td></td>
+				<td></td>
+				<td class = "edit">
+					<i class = "glyphicon glyphicon-edit editBtn"></i>
+					<i class = "glyphicon glyphicon-trash trashBtn"></i>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div class="modal" id = "myModal" data-backdrop="static">
+	<div class="modal-content">
+		<div class="modal-header">
+			<span class = "back">< 返回</span>
+			<span class = "myTitle">添加栏目信息</span>
+		</div>
+		<div class="modal-body">
+			<span class = "hiddenId"></span>
+			<p>栏目名称</p>
+			<input type="text" name = "columnname" class = "colu">
+			<p>父栏目</p>
+			<select name="sel" id="mySel">
+				<option value="">————请选择你想选的项目————</option>
+			</select>
+			<p>描述</p>
+			<input type="text" name = "describe" class = "desc">
+		</div>
+		<button class = "btn btn-success sureBtn">确认</button>
+	</div>
+</div>
+<script type="text/javascript">
+	$(".columnContent").height($(window).height()-48);
+	// 请求所有栏目信息
+	$(".back").click(function() {
+		$("#myModal").modal("hide");
+	});
+	$.get("http://120.78.164.247:8099/manager/category/findAllCategory",function(results) {
+	    	console.log(results);
+	    	var data = results.data;
+	    // 添加数据库中的数据
+	    	data.forEach(function(item) {
+	    		var $cloneTr = $(".hidden").clone().removeAttr("class");
+	    		$($cloneTr).children(":first").children().val(item.id);
+	    		$($cloneTr.children()[1]).text(item.name);
+	    		if(item.parent) {
+	    			$($cloneTr.children()[2]).text(item.parent.name);
+	    		}else {
+	    			$($cloneTr.children()[2]).text("无");
+	    		}
+	    		$($cloneTr.children()[3]).text(item.comment);
+	    		$("tbody").append($cloneTr); 
+	    		var option = "<option value='"+item.id+"'>"+item.name+"</option>";
+	    		$("#mySel").append(option);
+	    	});
+
+	    //单行删除
+	    	$(".trashBtn").click(function() {
+	    		var id = $(this).parent().parent().children(":first").children().val();
+	    		var o={
+					id: Number(id)
+				}
+	    		$.get("http://120.78.164.247:8099/manager/category/deleteCategoryById",o,function(results) {
+	    			if(results.status == 200) {
+	    				$(".rightContent").load('pages/columnpage.html');
+	    			}else {
+	    				alert("删除失败");
+	    			}
+	    		});
+	    	});
+	    // 多行删除
+	    	$(".delBtn").click(function() {
+	    		var ids = [];
+	    		$(".myCheck:checked").each(function(index,item) {
+	    			var id = $(item).val();
+	    			ids.push(id);
+	    		});
+	    		if(ids.length) {
+	    			var o = {
+	    				ids: ids.toString()
+	    			}
+	    			$.post("http://120.78.164.247:8099/manager/category/batchDeleteCategory",o,function(results){
+						if(results.status==200){
+							$(".rightContent").load('pages/columnpage.html');
+						}
+					});
+	    		}else {
+	    			alert("请选择想要删除的信息");
+	    		}
+	    	});
+    	//添加按钮
+			$(".addBtn").click(function() {
+				//修改模态框栏目名称
+				$(".myTitle").text("添加栏目信息");
+				// 添加前清空添加框中的内容
+				$(".colu").val("");
+				$("#mySel").val("");
+				$(".desc").val("");
+			});
+		// 修改按钮 更新
+			$(".editBtn").click(function() {
+				$("#myModal").modal("show");
+				//修改模态框栏目名称
+				$(".myTitle").text("修改栏目信息");
+				// 获取当前行数据
+				var name = $(this).parent().parent().children()[1].innerHTML;
+				var mySel = $(this).parent().parent().children()[2].innerHTML;
+				var desc = $(this).parent().parent().children()[3].innerHTML;
+			// 获取id 放在隐藏元素中用来判断是否为修改
+				var hiddenId = $(this).parent().parent().children(":first").children().val();
+				$(".hiddenId").text(hiddenId);
+				var id=data.filter(function(item){
+					return item.name==mySel;
+				})[0].id;
+				// 给添加框中显示当前行数据
+				$(".colu").val(name);
+				$("#mySel").val(id);
+				$(".desc").val(desc);
+			})
+
+
+		//模态框确认按钮
+			$(".sureBtn").click(function() {
+				var name = $(".colu").val();
+				var mySel = $("#mySel").val();
+				var desc = $(".desc").val();
+				var hiddenId=$(".hiddenId").text();
+				if(hiddenId) {
+					// id存在，应该修改
+					if(name && desc){
+						if(mySel){
+							var o={
+								id:hiddenId,
+								name:name,
+								comment:desc,
+								parentId:mySel,
+								no:0
+							}
+						}else{
+							var o={
+								id:hiddenId,
+								name:name,
+								comment:desc,
+								no:0
+							}
+						}
+						
+					}else{
+						alert("请输入内容");
+					}
+				}else{
+					//此时id不存在，应该添加
+					if(name && desc){
+						if(mySel){
+							var o={
+								name:name,
+								comment:desc,
+								parentId:mySel,
+								no:0
+							}
+						}else{
+							var o={
+								name:name,
+								comment:desc,
+								no:0
+							}
+						}
+						
+					}else{
+						alert("请输入内容");
+					}
+				}	
+				$.post("http://120.78.164.247:8099/manager/category/saveOrUpdateCategory",o,function(results) {
+					if(results.status == 200) {
+						$(".rightContent").load('pages/columnpage.html');
+					}else {
+						alert("新增失败");
+					}
+				});
+			});
+
+
+	    });
+</script>
